@@ -402,6 +402,8 @@
                                     <option value="cash" {{ old('payment_mode', $consignment->payment_mode) == 'cash' ? 'selected' : '' }}>Cash</option>
                                     <option value="credit" {{ old('payment_mode', $consignment->payment_mode) == 'credit' ? 'selected' : '' }}>Credit</option>
                                     <option value="advance" {{ old('payment_mode', $consignment->payment_mode) == 'advance' ? 'selected' : '' }}>Advance</option>
+                                    <option value="to be billed" {{ old('payment_mode', $consignment->payment_mode) == 'to be billed' ? 'selected' : '' }}>To be Billed</option>    
+                                    <option value="cheque" {{ old('payment_mode', $consignment->payment_mode) == 'cheque' ? 'selected' : '' }}>Cheque</option>
                                 </select>
                                 @error('payment_mode')
                                     <div class="invalid-feedback">{{ $message }}</div>
