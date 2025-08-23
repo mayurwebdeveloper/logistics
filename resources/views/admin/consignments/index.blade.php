@@ -148,6 +148,12 @@
                                                        data-bs-toggle="tooltip" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    <a href="{{ route('admin.consignments.pdf', $consignment) }}" 
+                                                       class="btn btn-sm btn-outline-info"
+                                                       data-bs-toggle="tooltip" title="Download PDF"
+                                                       target="_blank">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    </a>
                                                     <form method="POST" 
                                                           action="{{ route('admin.consignments.destroy', $consignment) }}" 
                                                           class="d-inline"

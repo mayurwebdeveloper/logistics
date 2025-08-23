@@ -10,6 +10,8 @@ use App\Models\Consignee;
 use App\Models\ConsignmentItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class ConsignmentController extends Controller
 {
@@ -238,6 +240,91 @@ class ConsignmentController extends Controller
 
         return redirect()->route('admin.consignments.index')
             ->with('success', 'Consignment deleted successfully.');
+    }
+
+    public function generatePdf(Consignment $consignment)
+    {
+        // Load the consignment with all related data
+        $consignment->load(['company', 'consignor', 'consignee', 'items']);
+        
+        // Get company details for the header
+        $company = $consignment->company;
+        
+        // Calculate GST amounts
+        $igst_amount = ($consignment->freight_amount * $consignment->igst_rate) / 100;
+        $cgst_amount = ($consignment->freight_amount * $consignment->cgst_rate) / 100;
+        $sgst_amount = ($consignment->freight_amount * $consignment->sgst_rate) / 100;
+        
+        // Format amounts for display
+        $formatted_freight = number_format($consignment->freight_amount, 0);
+        $formatted_total = number_format($consignment->total_amount, 0);
+        $formatted_hamali = number_format($consignment->hamali_union, 0);
+        
+        // Generate PDF using the existing template
+        $pdf = PDF::loadView('admin.consignments.consignment-pdf', compact(
+            'consignment',
+            'company',
+            'igst_amount',
+            'cgst_amount', 
+            'sgst_amount',
+            'formatted_freight',
+            'formatted_total',
+            'formatted_hamali'
+        ));
+        
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Set UTF-8 encoding for proper character display
+        $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
+        $pdf->getDomPDF()->set_option('isPhpEnabled', true);
+        
+        // Generate filename
+        $filename = 'consignment_' . $consignment->consignment_number . '_' . date('Y-m-d') . '.pdf';
+        
+        // Return PDF for download
+        return $pdf->download($filename);
+    }
+
+    public function viewPdf(Consignment $consignment)
+    {
+        // Load the consignment with all related data
+        $consignment->load(['company', 'consignor', 'consignee', 'items']);
+        
+        // Get company details for the header
+        $company = $consignment->company;
+        
+        // Calculate GST amounts
+        $igst_amount = ($consignment->freight_amount * $consignment->igst_rate) / 100;
+        $cgst_amount = ($consignment->freight_amount * $consignment->cgst_rate) / 100;
+        $sgst_amount = ($consignment->freight_amount * $consignment->sgst_rate) / 100;
+        
+        // Format amounts for display
+        $formatted_freight = number_format($consignment->freight_amount, 0);
+        $formatted_total = number_format($consignment->total_amount, 0);
+        $formatted_hamali = number_format($consignment->hamali_union, 0);
+        
+        // Generate PDF using the existing template
+        $pdf = PDF::loadView('admin.consignments.consignment-pdf', compact(
+            'consignment',
+            'company',
+            'igst_amount',
+            'cgst_amount', 
+            'sgst_amount',
+            'formatted_freight',
+            'formatted_total',
+            'formatted_hamali'
+        ));
+        
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Set UTF-8 encoding for proper character display
+        $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
+        $pdf->getDomPDF()->set_option('isPhpEnabled', true);
+        
+        // Return PDF for inline viewing
+        return $pdf->stream('consignment_' . $consignment->consignment_number . '.pdf');
     }
 }
 

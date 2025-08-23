@@ -24,6 +24,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         // Resource routes for CRUD operations
         Route::resource('consignments', ConsignmentController::class);
+        
+        // PDF routes for consignments
+        Route::get('consignments/{consignment}/pdf', [ConsignmentController::class, 'generatePdf'])->name('consignments.pdf');
+        Route::get('consignments/{consignment}/view-pdf', [ConsignmentController::class, 'viewPdf'])->name('consignments.view-pdf');
+        
         Route::resource('trucks', TruckController::class);
         Route::resource('consignors', ConsignorController::class);
         Route::resource('consignees', ConsigneeController::class);

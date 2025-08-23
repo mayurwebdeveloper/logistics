@@ -357,7 +357,15 @@
                         <i class="fas fa-edit me-2"></i>
                         Edit Consignment
                     </a>
-                    <button type="button" class="btn btn-info btn-lg me-3" onclick="window.print()">
+                    <a href="{{ route('admin.consignments.pdf', $consignment) }}" class="btn btn-primary btn-lg me-3" target="_blank">
+                        <i class="fas fa-file-pdf me-2"></i>
+                        Download PDF
+                    </a>
+                    <a href="{{ route('admin.consignments.view-pdf', $consignment) }}" class="btn btn-info btn-lg me-3" target="_blank">
+                        <i class="fas fa-eye me-2"></i>
+                        View PDF
+                    </a>
+                    <button type="button" class="btn btn-secondary btn-lg me-3" onclick="window.print()">
                         <i class="fas fa-print me-2"></i>
                         Print Details
                     </button>
