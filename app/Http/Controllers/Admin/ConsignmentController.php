@@ -304,8 +304,8 @@ class ConsignmentController extends Controller
         $formatted_total = number_format($consignment->total_amount, 0);
         $formatted_hamali = number_format($consignment->hamali_union, 0);
         
-        // Generate PDF using the existing template
-        $pdf = PDF::loadView('admin.consignments.consignment-pdf', compact(
+        // Return the view as a regular web page without any layout
+        return view('admin.consignments.consignment-pdf', compact(
             'consignment',
             'company',
             'igst_amount',
@@ -315,16 +315,6 @@ class ConsignmentController extends Controller
             'formatted_total',
             'formatted_hamali'
         ));
-        
-        // Set paper size and orientation
-        $pdf->setPaper('A4', 'portrait');
-        
-        // Set UTF-8 encoding for proper character display
-        $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
-        $pdf->getDomPDF()->set_option('isPhpEnabled', true);
-        
-        // Return PDF for inline viewing
-        return $pdf->stream('consignment_' . $consignment->consignment_number . '.pdf');
     }
 }
 
